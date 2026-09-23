@@ -96,37 +96,34 @@ info "Instalando dependências do backend (pode demorar um pouco)..."
 npm install --omit=dev --silent || error "Falha no npm install"
 ok "Dependências instaladas"
 
-# ─── 6. Criar .env ───────────────────────────────────────
-if [ ! -f ".env.example" ]; then
-  warn ".env.example não encontrado — pulando criação do .env."
-else
-  cp .env.example .env
-
-  # Gera JWT_SECRET aleatório
-  JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
-
-  # Substitui o placeholder (compatível com GNU sed e BSD sed do macOS)
-  if sed --version >/dev/null 2>&1; then
-    sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_SECRET|" .env
-  else
-    sed -i '' "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_SECRET|" .env
-  fi
-
-  ok "Arquivo .env criado com JWT_SECRET aleatório"
-fi
-
-# ─── 7. Perguntar a porta ────────────────────────────────
+# ─── 6. Perguntar a porta ────────────────────────────────
+echo ""
 read -p "$(echo -e "${CYAN}➜${NC} Porta do servidor [6002]: ")" PORT_INPUT
 PORT_INPUT=${PORT_INPUT:-6002}
 
+# ─── 7. Criar .env com JWT_SECRET aleatório ──────────────
+info "Configurando arquivo .env..."
+
 if [ -f ".env" ]; then
-  if sed --version >/dev/null 2>&1; then
-    sed -i "s|^PORT=.*|PORT=$PORT_INPUT|" .env
-  else
-    sed -i '' "s|^PORT=.*|PORT=$PORT_INPUT|" .env
-  fi
-  ok "Porta configurada: $PORT_INPUT"
+  warn "Já existe um .env. Fazendo backup para .env.backup"
+  mv .env ".env.backup.$(date +%s)"
 fi
+
+# Gera JWT_SECRET aleatório (64 caracteres hex)
+JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+
+cat > .env <<EOF
+# ─── RatPanel — Configuração ─────────────────────────────
+# Este arquivo foi gerado automaticamente pelo install.sh
+# Para trocar o JWT_SECRET manualmente, veja INSTALL.md
+
+PORT=$PORT_INPUT
+JWT_SECRET=$JWT_SECRET
+EOF
+
+ok "Arquivo .env criado"
+ok "JWT_SECRET gerado automaticamente (64 caracteres)"
+ok "Porta configurada: $PORT_INPUT"
 
 # ─── 8. Finalizar ────────────────────────────────────────
 echo ""
@@ -140,6 +137,9 @@ echo -e "  🌐 Acessar:    ${CYAN}http://localhost:$PORT_INPUT/login.html${NC}"
 echo ""
 echo -e "  👤 Login padrão:  ${YELLOW}admin / admin123${NC}"
 echo -e "  ${RED}${BOLD}⚠  Troque a senha imediatamente após o primeiro login!${NC}"
+echo ""
+echo -e "  🔑 JWT_SECRET: salvo em ${CYAN}$INSTALL_DIR/backend/.env${NC}"
+echo -e "  ${YELLOW}   Pra trocar depois, veja o INSTALL.md${NC}"
 echo ""
 
 read -p "$(echo -e "${CYAN}➜${NC} Deseja iniciar o RatPanel agora? (s/N): ")" -n 1 -r
