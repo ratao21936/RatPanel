@@ -164,7 +164,6 @@ Reinicie o painel.
 ### "Não consigo logar"
 - Confirme que o `.env` existe (`ls backend/.env`)
 - Confirme que o `JWT_SECRET` está definido
-- Se você apagou o `users.json`, reinicie o painel — ele recria o admin padrão automaticamente
 - Tente limpar o cache do navegador
 
 ### "Node.js not found"
