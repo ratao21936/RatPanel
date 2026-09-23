@@ -22,24 +22,6 @@ bower_components/
 web_modules/
 .pnpm-store
 
-# ─── Ambiente / Segredos ─────────────────────────────────
-.env
-.env.*
-!.env.example
-
-# ─── Dados do RatPanel (NÃO subir) ───────────────────────
-backend/users.json
-backend/webhook.json
-backend/processes.json
-backend/schedules.json
-backend/tags.json
-backend/notes.json
-backend/groups.json
-
-# ─── Pastas de conteúdo do usuário ───────────────────────
-backend/uploads/
-backend/bots/
-
 # ─── Build / cache ───────────────────────────────────────
 dist
 build/
@@ -102,3 +84,10 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# ─── Uploads / conteúdo do usuário ──────────────────────
+backend/uploads/
+backend/bots/
+
+# ─── Nota: .env e *.json SÃO versionados agora ──────────
+# ─── Certifique-se de NÃO commitar segredos reais!       ─
