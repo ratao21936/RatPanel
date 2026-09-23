@@ -1,0 +1,10 @@
+{
+  "webhookUrl": "",
+  "events": {
+    "crash": true,
+    "start": true,
+    "stop": true,
+    "restart": true
+  },
+  "mentionRole": ""
+}

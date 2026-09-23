@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RatHost — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a090d;
+    --bg2: #110f16;
+    --bg3: #19161f;
+    --border: #262130;
+    --border2: #332c40;
+    --text: #eeedf2;
+    --muted: #726d80;
+    --accent: #7c5cff;
+    --accent2: #5b3fd1;
+    --accent-rgb: 124,92,255;
+    --accent2-rgb: 91,63,209;
+    --green: #4fae63;
+    --red: #e0524a;
+    --yellow: #dba63c;
+    --font-display: 'JetBrains Mono', ui-monospace, monospace;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-ui: 'Inter', system-ui, sans-serif;
+  }
+
+  :root[data-color-theme="violet"]  { --accent:#7c5cff; --accent2:#5b3fd1; --accent-rgb:124,92,255; --accent2-rgb:91,63,209; }
+  :root[data-color-theme="red"]     { --accent:#ef4444; --accent2:#b91c1c; --accent-rgb:239,68,68;  --accent2-rgb:185,28,28; }
+  :root[data-color-theme="cyan"]    { --accent:#22d3ee; --accent2:#0e7490; --accent-rgb:34,211,238; --accent2-rgb:14,116,144; }
+  :root[data-color-theme="navy"]    { --accent:#3b82f6; --accent2:#1e40af; --accent-rgb:59,130,246; --accent2-rgb:30,64,175; }
+  :root[data-color-theme="pink"]    { --accent:#ec4899; --accent2:#a3175c; --accent-rgb:236,72,153; --accent2-rgb:163,23,92; }
+  :root[data-color-theme="green"]   { --accent:#22c55e; --accent2:#15803d; --accent-rgb:34,197,94;  --accent2-rgb:21,128,61; }
+  :root[data-color-theme="orange"]  { --accent:#f97316; --accent2:#c2410c; --accent-rgb:249,115,22; --accent2-rgb:194,65,12; }
+  :root[data-color-theme="amber"]   { --accent:#eab308; --accent2:#a16207; --accent-rgb:234,179,8;  --accent2-rgb:161,98,7; }
+  :root[data-color-theme="teal"]    { --accent:#14b8a6; --accent2:#0f766e; --accent-rgb:20,184,166; --accent2-rgb:15,118,110; }
+  :root[data-color-theme="magenta"] { --accent:#d946ef; --accent2:#a21caf; --accent-rgb:217,70,239; --accent2-rgb:162,28,175; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    line-height: 1.5;
+    transition: background .3s, color .3s;
+  }
+
+  /* Grid de fundo — estático e sutil, com respiração leve */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(var(--accent-rgb), .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--accent-rgb), .05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    animation: breathe 8s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /* Glow sutil no centro — MUITO discreto */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), .10) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    animation: breathe2 10s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: .5 }
+    50% { opacity: 1 }
+  }
+
+  @keyframes breathe2 {
+    0%, 100% { opacity: .5; transform: scale(1) }
+    50% { opacity: 1; transform: scale(1.15) }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 36px;
+    width: 400px;
+    max-width: 95vw;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .5);
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 6px;
+    letter-spacing: .02em;
+  }
+
+  .logo-bracket { color: var(--accent); }
+
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1) }
+    50% { opacity: .5; transform: scale(.8) }
+  }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .step {
+    display: none;
+    animation: fadeIn .2s ease;
+  }
+
+  .step.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px) }
+    to { opacity: 1; transform: none }
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .form-input:focus {
+    border-color: rgba(var(--accent-rgb), .5);
+  }
+
+  .form-input::placeholder { color: var(--muted); }
+
+  .otp-input {
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: 8px;
+    font-weight: 700;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 11px;
+    background: rgba(var(--accent-rgb), .1);
+    border: 1px solid rgba(var(--accent-rgb), .3);
+    border-radius: 5px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    margin-top: 8px;
+    letter-spacing: .3px;
+  }
+
+  .btn:hover {
+    background: rgba(var(--accent-rgb), .18);
+  }
+
+  .btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  .btn-back {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .btn-back:hover {
+    background: var(--bg3);
+    color: var(--text);
+  }
+
+  .error-msg {
+    background: rgba(224, 82, 74, .1);
+    border: 1px solid rgba(224, 82, 74, .25);
+    border-radius: 5px;
+    padding: 9px 12px;
+    font-size: 11px;
+    color: var(--red);
+    margin-bottom: 14px;
+    display: none;
+    font-family: var(--font-mono);
+  }
+
+  .twofa-info {
+    background: rgba(var(--accent-rgb), .07);
+    border: 1px solid rgba(var(--accent-rgb), .2);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-family: var(--font-mono);
+  }
+
+  .twofa-info strong { color: var(--text); }
+
+  .footer-note {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 10px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--bg3) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <div class="logo">
+      <span class="logo-bracket">[</span><span style="color:var(--text)">RAT</span><span class="logo-bracket">]</span>
+      <div class="logo-dot"></div>
+    </div>
+    <div class="card-sub" id="card-sub">RatHost — script &amp; bot manager</div>
+  </div>
+
+  <!-- Step 1: Username + Password -->
+  <div class="step active" id="step-login">
+    <div class="error-msg" id="err1"></div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="username" type="text" placeholder="admin" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="password" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn" id="btn-login" onclick="doLogin()">Sign In →</button>
+    <div class="footer-note">Feito por Rato</div>
+  </div>
+
+  <!-- Step 2: 2FA OTP -->
+  <div class="step" id="step-2fa">
+    <div class="twofa-info">
+      <strong>Two-Factor Authentication</strong><br>
+      Open your authenticator app and enter the 6-digit code for <strong>RatHost</strong>.
+    </div>
+    <div class="error-msg" id="err2"></div>
+    <div class="form-group">
+      <label class="form-label">Authentication Code</label>
+      <input class="form-input otp-input" id="otp" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" onkeydown="if(event.key==='Enter')do2fa()" oninput="autoSubmit2fa(this)">
+    </div>
+    <button class="btn" id="btn-2fa" onclick="do2fa()">Verify →</button>
+    <button class="btn btn-back" onclick="goBack()">← Back</button>
+  </div>
+</div>
+
+<script>
+  if (localStorage.getItem('ctrl_token')) window.location.href = '/';
+  document.documentElement.setAttribute('data-color-theme', localStorage.getItem('ctrl_color') || 'violet');
+  let partialToken = null;
+
+  async function doLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('btn-login');
+    if (!username || !password) { showErr('err1','Enter username and password'); return; }
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    hideErr('err1');
+    try {
+      const res  = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username,password}) });
+      const data = await res.json();
+      if (!res.ok) { showErr('err1', data.error||'Login failed'); btn.disabled=false; btn.textContent='Sign In →'; return; }
+      if (data.requires2fa) {
+        partialToken = data.partialToken;
+        document.getElementById('step-login').classList.remove('active');
+        document.getElementById('step-2fa').classList.add('active');
+        document.getElementById('card-sub').textContent = '2-factor authentication';
+        setTimeout(() => document.getElementById('otp').focus(), 100);
+        btn.disabled=false; btn.textContent='Sign In →';
+        return;
+      }
+      complete(data);
+    } catch(e) { showErr('err1','Cannot connect to server'); btn.disabled=false; btn.textContent='Sign In →'; }
+  }
+
+  async function do2fa() {
+    const otp = document.getElementById('otp').value.replace(/\s/g,'');
+    const btn = document.getElementById('btn-2fa');
+    if (otp.length !== 6) { showErr('err2','Enter the 6-digit code'); return; }
+    btn.disabled=true; btn.textContent='Verifying...';
+    hideErr('err2');
+    try {
+      const res  = await fetch('/api/auth/2fa/verify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({partialToken,otp}) });
+      const data = await res.json();
+      if (!res.ok) { showErr('err2',data.error||'Invalid code'); btn.disabled=false; btn.textContent='Verify →'; document.getElementById('otp').value=''; return; }
+      complete(data);
+    } catch(e) { showErr('err2','Server error'); btn.disabled=false; btn.textContent='Verify →'; }
+  }
+
+  function autoSubmit2fa(el) {
+    if (el.value.replace(/\s/g,'').length === 6) do2fa();
+  }
+
+  function goBack() {
+    document.getElementById('step-2fa').classList.remove('active');
+    document.getElementById('step-login').classList.add('active');
+    document.getElementById('card-sub').textContent = 'RatHost — script & bot manager';
+    document.getElementById('otp').value = '';
+    partialToken = null;
+  }
+
+  function complete(data) {
+    localStorage.setItem('ctrl_token', data.token);
+    localStorage.setItem('ctrl_user', JSON.stringify(data.user));
+    window.location.href = '/';
+  }
+
+  function showErr(id, msg) { const e=document.getElementById(id); e.textContent=msg; e.style.display='block'; }
+  function hideErr(id) { document.getElementById(id).style.display='none'; }
+
+  document.getElementById('username').focus();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[
+  {
+    "id": "db06192b-2fc9-4145-a67a-02bbdcbb9efc",
+    "username": "Admin",
+    "password": "$2a$10$.CKTeq3gVm1eHNzPPVH/beTPLvfzy2PVTmuYjOImjJVtvOrDVZzwi",
+    "role": "admin",
+    "twoFaEnabled": false,
+    "twoFaSecret": null,
+    "createdAt": "2026-03-12T23:10:45.597Z",
+    "lastLogin": "2026-09-23T19:39:58.728Z",
+    "colorTheme": "violet"
+  }
+]
