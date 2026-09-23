@@ -1,7 +1,7 @@
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────
 //  AuthManager v3
 //  Multi-user roles + TOTP 2FA (speakeasy)
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────
 const fs       = require('fs');
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
